@@ -1,0 +1,113 @@
+[gd_scene load_steps=18 format=3 uid="uid://lsv0sh6n7l1o"]
+
+[ext_resource type="Script" path="res://Scripts/Cameras/StepAmplitude.gd" id="1_i2h7m"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/StateMachine.gd" id="2_658wc"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerMouseLook.gd" id="2_x1b0k"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerWalkState.gd" id="3_ll1gt"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerSprintState.gd" id="4_pms81"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/StayState.gd" id="5_526qw"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/DashState.gd" id="6_v6qkb"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerMovementStateKeeper.gd" id="7_li8gt"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/ReloadState.gd" id="9_nfc1u"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerAttackState.gd" id="10_cu0fk"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/AttackKeeper.gd" id="11_mhx56"]
+[ext_resource type="Script" path="res://Scripts/General/FSM/States/IdleShootState.gd" id="11_ycp1h"]
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="14_o7bx0"]
+[ext_resource type="Script" path="res://Scripts/General/RangedWeapon.gd" id="14_vae2h"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="15_mnm5s"]
+[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="16_ncinx"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_a3ecs"]
+size = Vector3(0.558838, 2, 0.570313)
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+collision_layer = 2
+collision_mask = 3
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_a3ecs")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0999999, 0)
+
+[node name="Camera" type="Camera3D" parent="Head" node_paths=PackedStringArray("_parent", "_head")]
+script = ExtResource("1_i2h7m")
+_parent = NodePath("../..")
+_head = NodePath("..")
+stepAmplitude = 0.08
+
+[node name="MouseLook" type="Node3D" parent="Head" node_paths=PackedStringArray("_player")]
+script = ExtResource("2_x1b0k")
+_player = NodePath("../..")
+
+[node name="MovementFSM" type="Node3D" parent="." node_paths=PackedStringArray("initializeState")]
+script = ExtResource("2_658wc")
+initializeState = NodePath("WalkState")
+
+[node name="WalkState" type="Node3D" parent="MovementFSM" node_paths=PackedStringArray("stateKeeper", "_parent")]
+script = ExtResource("3_ll1gt")
+stateKeeper = NodePath("../MovementStateKeeper")
+_parent = NodePath("../..")
+
+[node name="SprintState" type="Node3D" parent="MovementFSM" node_paths=PackedStringArray("stateKeeper", "_parent")]
+script = ExtResource("4_pms81")
+stateKeeper = NodePath("../MovementStateKeeper")
+_parent = NodePath("../..")
+initialSpeed = 7.5
+
+[node name="StayState" type="Node3D" parent="MovementFSM" node_paths=PackedStringArray("stateKeeper")]
+script = ExtResource("5_526qw")
+stateKeeper = NodePath("../MovementStateKeeper")
+
+[node name="DashState" type="Node3D" parent="MovementFSM"]
+script = ExtResource("6_v6qkb")
+
+[node name="MovementStateKeeper" type="Node3D" parent="MovementFSM" node_paths=PackedStringArray("walkState", "sprintState", "stayState", "dashState")]
+script = ExtResource("7_li8gt")
+walkState = NodePath("../WalkState")
+sprintState = NodePath("../SprintState")
+stayState = NodePath("../StayState")
+dashState = NodePath("../DashState")
+
+[node name="AttackFSM" type="Node3D" parent="." node_paths=PackedStringArray("initializeState")]
+script = ExtResource("2_658wc")
+initializeState = NodePath("AttackState")
+
+[node name="ReloadState" type="Node3D" parent="AttackFSM"]
+script = ExtResource("9_nfc1u")
+
+[node name="AttackState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("stateKeeper", "weaponDependencyConatiner")]
+script = ExtResource("10_cu0fk")
+stateKeeper = NodePath("../StateKeeper")
+weaponDependencyConatiner = NodePath("../../WeaponContainer")
+
+[node name="IdleShootState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_stateKeeper", "weaponDependencyContainer")]
+script = ExtResource("11_ycp1h")
+_stateKeeper = NodePath("../StateKeeper")
+weaponDependencyContainer = NodePath("../../WeaponContainer")
+
+[node name="StateKeeper" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("reloadState", "attackState", "idleState")]
+script = ExtResource("11_mhx56")
+reloadState = NodePath("../ReloadState")
+attackState = NodePath("../AttackState")
+idleState = NodePath("../IdleShootState")
+
+[node name="WeaponContainer" type="Node3D" parent="." node_paths=PackedStringArray("weaponAttackInput", "weapon")]
+script = ExtResource("14_o7bx0")
+weaponAttackInput = NodePath("Pistol/WeaponAttackInput")
+weapon = NodePath("Pistol")
+
+[node name="Pistol" type="Area3D" parent="WeaponContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+script = ExtResource("14_vae2h")
+
+[node name="WeaponAttackInput" type="Node3D" parent="WeaponContainer/Pistol"]
+script = ExtResource("15_mnm5s")
+
+[node name="Collision" type="RayCast3D" parent="WeaponContainer" node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+target_position = Vector3(0, 0, -1)
+script = ExtResource("16_ncinx")
+target = NodePath("../..")

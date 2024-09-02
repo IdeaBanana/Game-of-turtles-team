@@ -1,3 +1,69 @@
-[gd_scene format=3 uid="uid://bexu2r3m6acmq"]
+[gd_scene load_steps=8 format=3 uid="uid://bexu2r3m6acmq"]
+
+[ext_resource type="PackedScene" uid="uid://lsv0sh6n7l1o" path="res://Scenes/Objects/Player/Player.tscn" id="1_hmbhc"]
+[ext_resource type="PackedScene" uid="uid://b5qmlae2m4ky5" path="res://Scenes/Objects/Enemies/GhoulPony.tscn" id="2_027co"]
+
+[sub_resource type="Environment" id="Environment_v5ggs"]
+
+[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_pdqe7"]
+albedo_color = Color(1, 0.0941176, 0.337255, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kdkws"]
+material = SubResource("ORMMaterial3D_pdqe7")
+
+[sub_resource type="BoxMesh" id="BoxMesh_qi81h"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sncq8"]
+height = 2.91531
 
 [node name="Level" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_v5ggs")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="WorldEnvironment"]
+transform = Transform3D(1, 0, 0, 0, 0.64679, 0.762668, 0, -0.762668, 0.64679, 0, 5.28592, 5.1)
+shadow_enabled = true
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="Ground" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 0, 0)
+mesh = SubResource("PlaneMesh_kdkws")
+
+[node name="Wall" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(0.125, 0, 0, 0, 3, 0, 0, 0, 12, 6.06, 1.5, 0)
+mesh = SubResource("BoxMesh_qi81h")
+
+[node name="Wall2" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(0.125, 0, 0, 0, 3, 0, 0, 0, 12, -6, 1.5, 0)
+mesh = SubResource("BoxMesh_qi81h")
+
+[node name="Wall3" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(-5.46392e-09, 0, 12, 0, 3, 0, -0.125, 0, -5.24537e-07, 0, 1.5, -6)
+mesh = SubResource("BoxMesh_qi81h")
+
+[node name="Wall4" type="MeshInstance3D" parent="Environment"]
+transform = Transform3D(-5.46392e-09, 0, 12, 0, 3, 0, -0.125, 0, -5.24537e-07, 0, 1.5, 6)
+mesh = SubResource("BoxMesh_qi81h")
+
+[node name="Player" parent="." instance=ExtResource("1_hmbhc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.69774, 4.17)
+
+[node name="Collision" parent="Player" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.24, 0)
+shape = SubResource("CapsuleShape3D_sncq8")
+
+[node name="Head" parent="Player" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+
+[node name="GhoulPony" parent="." instance=ExtResource("2_027co")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.85187)
+
+[node name="Enemy" parent="." instance=ExtResource("2_027co")]
+transform = Transform3D(0.714155, 0, 0.699987, 0, 1, 0, -0.699987, 0, 0.714155, -0.215479, 0, -1.73154)
+
+[node name="Enemy2" parent="." instance=ExtResource("2_027co")]
+transform = Transform3D(0.896734, 0, -0.44257, 0, 1, 0, 0.44257, 0, 0.896734, 0.776508, 0, -0.411067)
+
+[editable path="Player"]
