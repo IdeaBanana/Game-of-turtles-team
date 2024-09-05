@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://b16eiryfvlp5o"]
+
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_heb5e"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_igf3x"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="3_8uqdh"]
+[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="4_fb8q7"]
+[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="5_mpmqs"]
+
+[node name="Pistol" type="Node3D" node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+script = ExtResource("1_heb5e")
+weaponAttackInput = NodePath("WeaponAttackInput")
+enemyCollisionFinder = NodePath("CollisionFinder")
+weapon = NodePath("Pistol")
+damageCalculator = NodePath("DamageCalculator")
+
+[node name="Pistol" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+script = ExtResource("2_igf3x")
+weaponDependencyContainer = NodePath("..")
+maxPunchedEnemiesValue = 2
+minAttackDamage = 20.0
+maxAttackDamage = 40.0
+constAttackDamage = 30.0
+
+[node name="WeaponAttackInput" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+script = ExtResource("3_8uqdh")
+
+[node name="DamageCalculator" type="Node3D" parent="."]
+script = ExtResource("4_fb8q7")
+
+[node name="CollisionFinder" type="RayCast3D" parent="." node_paths=PackedStringArray("startNodeForMoveRay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+target_position = Vector3(0, 0, -1)
+script = ExtResource("5_mpmqs")
+startNodeForMoveRay = NodePath("..")

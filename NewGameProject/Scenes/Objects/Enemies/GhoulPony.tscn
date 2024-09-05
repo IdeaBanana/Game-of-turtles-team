@@ -32,11 +32,13 @@ shape = SubResource("CapsuleShape3D_sax76")
 transform = Transform3D(200, 0, 0, 0, 200, 0, 0, 0, 200, 0, 1, 0)
 texture = SubResource("AtlasTexture_4ee6m")
 
-[node name="Hp" type="Node" parent="."]
+[node name="Hp" type="Node" parent="." node_paths=PackedStringArray("_parent")]
 script = ExtResource("2_0kcp4")
+_parent = NodePath("..")
 
 [node name="DamageablePartBody3D" type="Area3D" parent="."]
 script = ExtResource("3_arout")
+damage = 50.0
 
 [node name="Collision" type="CollisionShape3D" parent="DamageablePartBody3D"]
 transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 0, 1, 0)

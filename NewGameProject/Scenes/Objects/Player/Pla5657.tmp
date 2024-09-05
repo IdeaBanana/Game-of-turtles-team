@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://lsv0sh6n7l1o"]
+[gd_scene load_steps=20 format=3 uid="uid://lsv0sh6n7l1o"]
 
 [ext_resource type="Script" path="res://Scripts/Cameras/StepAmplitude.gd" id="1_i2h7m"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/StateMachine.gd" id="2_658wc"]
@@ -13,7 +13,11 @@
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/AttackKeeper.gd" id="11_mhx56"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/IdleShootState.gd" id="11_ycp1h"]
 [ext_resource type="Script" path="res://Scripts/General/CurrentSelectWeapon.gd" id="13_d5uqn"]
-[ext_resource type="PackedScene" uid="uid://b2nfunxt1rhd3" path="res://Scenes/Objects/Weapons/CrankGun.tscn" id="14_vfg3j"]
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="14_o7bx0"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="15_fb2uj"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="15_mnm5s"]
+[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="16_ncinx"]
+[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="18_87asn"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a3ecs"]
 size = Vector3(0.558838, 2, 0.570313)
@@ -95,15 +99,34 @@ idleState = NodePath("../IdleShootState")
 
 [node name="CurrentSelectWeapon" type="Node3D" parent="." node_paths=PackedStringArray("currentWeaponContainer")]
 script = ExtResource("13_d5uqn")
-currentWeaponContainer = NodePath("../CrankGun")
+currentWeaponContainer = NodePath("../WeaponContainer")
 
-[node name="CrankGun" parent="." instance=ExtResource("14_vfg3j")]
+[node name="WeaponContainer" type="Node3D" parent="." node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+script = ExtResource("14_o7bx0")
+weaponAttackInput = NodePath("WeaponAttackInput")
+enemyCollisionFinder = NodePath("Collision")
+weapon = NodePath("Pistol")
+damageCalculator = NodePath("DamageCalculator")
 
-[node name="CrankGun" parent="CrankGun" index="0"]
-maxPunchedEnemiesValue = 5
-minAttackDamage = 1.0
-maxAttackDamage = 5.0
-scatter = 0.4
-constAttackDamage = 10.0
+[node name="Pistol" type="Area3D" parent="WeaponContainer" node_paths=PackedStringArray("weaponDependencyContainer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+script = ExtResource("15_fb2uj")
+weaponDependencyContainer = NodePath("..")
+maxPunchedEnemiesValue = 2
+minAttackDamage = 20.0
+maxAttackDamage = 40.0
+constAttackDamage = 1.0
 
-[editable path="CrankGun"]
+[node name="WeaponAttackInput" type="Node3D" parent="WeaponContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+script = ExtResource("15_mnm5s")
+
+[node name="Collision" type="RayCast3D" parent="WeaponContainer"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
+target_position = Vector3(0, 0, -1)
+script = ExtResource("16_ncinx")
+
+[node name="DamageCalculator" type="Node3D" parent="WeaponContainer" node_paths=PackedStringArray("_weaponContainer")]
+script = ExtResource("18_87asn")
+_weaponContainer = NodePath("..")

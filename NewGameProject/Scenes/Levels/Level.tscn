@@ -58,12 +58,13 @@ shape = SubResource("CapsuleShape3D_sncq8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 
 [node name="GhoulPony" parent="." instance=ExtResource("2_027co")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.85187)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.821629)
 
-[node name="Enemy" parent="." instance=ExtResource("2_027co")]
-transform = Transform3D(0.714155, 0, 0.699987, 0, 1, 0, -0.699987, 0, 0.714155, -0.215479, 0, -1.73154)
+[node name="Ghoul" parent="." instance=ExtResource("2_027co")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00157166, -4.76837e-07, -0.790228)
 
-[node name="Enemy2" parent="." instance=ExtResource("2_027co")]
-transform = Transform3D(0.896734, 0, -0.44257, 0, 1, 0, 0.44257, 0, 0.896734, 0.776508, 0, -0.411067)
+[node name="Pony" parent="." instance=ExtResource("2_027co")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.4598)
 
 [editable path="Player"]
+[editable path="GhoulPony"]

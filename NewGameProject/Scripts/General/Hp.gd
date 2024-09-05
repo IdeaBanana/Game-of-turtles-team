@@ -3,6 +3,7 @@ extends Node
 
 class_name Hp
 
+@export var _parent: Node3D
 @export var healthPoint: float = 100.0
 
 signal Damaged
@@ -15,12 +16,13 @@ func ApplyDamage(damage: float):
 		ApplyDeath()
 
 func CheckAndGetIsDeath() -> bool:
-	if healthPoint >= 0.0:
+	if healthPoint <= 0.0:
 		return true
 	return false
 
 func ApplyDeath() -> void:
 	Died.emit()
+	_parent.queue_free()
 
 func GetRemainingPoints() -> float:
 	return healthPoint

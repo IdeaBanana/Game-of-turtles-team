@@ -1,0 +1,28 @@
+[gd_scene load_steps=6 format=3 uid="uid://b2nfunxt1rhd3"]
+
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_c0mjp"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_6xgkf"]
+[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="3_1byg3"]
+[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="4_rp5c3"]
+[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="5_5adi4"]
+
+[node name="CrankGun" type="Node3D" node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+script = ExtResource("1_c0mjp")
+weaponAttackInput = NodePath("AutomaticWeaponInput")
+enemyCollisionFinder = NodePath("EnemyCollisionFinder")
+weapon = NodePath("CrankGun")
+damageCalculator = NodePath("DamageCalculator")
+
+[node name="CrankGun" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+script = ExtResource("2_6xgkf")
+weaponDependencyContainer = NodePath("..")
+
+[node name="DamageCalculator" type="Node3D" parent="."]
+script = ExtResource("3_1byg3")
+
+[node name="AutomaticWeaponInput" type="Node3D" parent="."]
+script = ExtResource("4_rp5c3")
+
+[node name="EnemyCollisionFinder" type="Node3D" parent="." node_paths=PackedStringArray("startNodeForMoveRay")]
+script = ExtResource("5_5adi4")
+startNodeForMoveRay = NodePath("..")

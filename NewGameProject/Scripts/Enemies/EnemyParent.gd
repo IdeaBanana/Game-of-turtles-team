@@ -4,5 +4,5 @@ class_name EnemyParent
 
 @export var hpNode: Hp
 
-func GetHp() -> Hp:
+func GetHpNode() -> Hp:
 	return hpNode

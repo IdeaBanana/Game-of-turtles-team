@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://cbq30bkaxs384"]
+
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_gw1tn"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_71obv"]
+[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="2_g2rwe"]
+[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="4_26dou"]
+[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="5_7ncrd"]
+
+[node name="WeaponDependencyContainer" type="Node3D" node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+script = ExtResource("1_gw1tn")
+weaponAttackInput = NodePath("WeaponInput")
+enemyCollisionFinder = NodePath("EnemyCollisionFinder")
+weapon = NodePath("RangedWeapon")
+damageCalculator = NodePath("DamageCalculator")
+
+[node name="RangedWeapon" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+script = ExtResource("2_71obv")
+weaponDependencyContainer = NodePath("..")
+maxPunchedEnemiesValue = 3
+minAttackDamage = 5.0
+maxAttackDamage = 20.0
+scatter = 0.1
+
+[node name="EnemyCollisionFinder" type="Node3D" parent="." node_paths=PackedStringArray("startNodeForMoveRay")]
+script = ExtResource("2_g2rwe")
+startNodeForMoveRay = NodePath("..")
+
+[node name="WeaponInput" type="Node3D" parent="."]
+script = ExtResource("4_26dou")
+
+[node name="DamageCalculator" type="Node3D" parent="."]
+script = ExtResource("5_7ncrd")
