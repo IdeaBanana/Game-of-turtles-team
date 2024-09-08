@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://lsv0sh6n7l1o"]
+[gd_scene load_steps=16 format=3 uid="uid://lsv0sh6n7l1o"]
 
 [ext_resource type="Script" path="res://Scripts/Cameras/StepAmplitude.gd" id="1_i2h7m"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/StateMachine.gd" id="2_658wc"]
@@ -13,14 +13,12 @@
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/AttackKeeper.gd" id="11_mhx56"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/IdleShootState.gd" id="11_ycp1h"]
 [ext_resource type="Script" path="res://Scripts/General/CurrentSelectWeapon.gd" id="13_d5uqn"]
-[ext_resource type="Script" path="res://Scripts/General/MeleeWeaponDependencyContainer.gd" id="14_5qogw"]
-[ext_resource type="Script" path="res://Scripts/General/ChainsawWeapon.gd" id="15_qgp07"]
-[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="16_1vkc3"]
+[ext_resource type="PackedScene" uid="uid://b16eiryfvlp5o" path="res://Scenes/Objects/Weapons/Pistol.tscn" id="14_v2t14"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a3ecs"]
 size = Vector3(0.558838, 2, 0.570313)
 
-[node name="Player" type="CharacterBody3D" groups=["Player"]]
+[node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 collision_layer = 2
 collision_mask = 3
@@ -80,6 +78,7 @@ script = ExtResource("9_nfc1u")
 currentSelectWeaponControler = NodePath("../../CurrentSelectWeapon")
 
 [node name="AttackState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("stateKeeper", "currentSelectWeaponControler")]
+visible = false
 script = ExtResource("10_cu0fk")
 stateKeeper = NodePath("../StateKeeper")
 currentSelectWeaponControler = NodePath("../../CurrentSelectWeapon")
@@ -97,17 +96,6 @@ idleState = NodePath("../IdleShootState")
 
 [node name="CurrentSelectWeapon" type="Node3D" parent="." node_paths=PackedStringArray("currentWeaponContainer") groups=["CurrentSelectedWeaponContainer"]]
 script = ExtResource("13_d5uqn")
-currentWeaponContainer = NodePath("../Chainsaw")
+currentWeaponContainer = NodePath("../Pistol")
 
-[node name="Chainsaw" type="Node3D" parent="." node_paths=PackedStringArray("weapon", "weaponAttackInput")]
-script = ExtResource("14_5qogw")
-weapon = NodePath("Chainsaw")
-weaponAttackInput = NodePath("Input")
-
-[node name="Chainsaw" type="Area3D" parent="Chainsaw"]
-script = ExtResource("15_qgp07")
-
-[node name="Collision" type="CollisionShape3D" parent="Chainsaw/Chainsaw"]
-
-[node name="Input" type="Node3D" parent="Chainsaw"]
-script = ExtResource("16_1vkc3")
+[node name="Pistol" parent="." instance=ExtResource("14_v2t14")]

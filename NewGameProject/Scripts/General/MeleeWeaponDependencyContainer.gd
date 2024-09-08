@@ -1,0 +1,3 @@
+extends WeaponDependencyContainer
+
+class_name MeleeWeaponDependencyContainer

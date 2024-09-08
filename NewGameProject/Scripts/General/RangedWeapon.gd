@@ -2,11 +2,8 @@ extends Weapon
 
 class_name RangedWeapon
 
-@export var weaponDependencyContainer: WeaponDependencyContainer
 
 @export_group("Ranged weapon settings")
-@export var maxPunchedEnemiesValue: int
-
 @export var minAttackDamage: float
 @export var maxAttackDamage: float
 
@@ -16,9 +13,6 @@ class_name RangedWeapon
 
 func GetScatter() -> float:
 	return scatter
-
-func GetMaxPunchedEnemiesValue() -> int:
-	return maxPunchedEnemiesValue
 
 func GetMinDamage() -> float:
 	return minAttackDamage

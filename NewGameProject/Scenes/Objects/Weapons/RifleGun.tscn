@@ -2,31 +2,27 @@
 
 [ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_gw1tn"]
 [ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_71obv"]
-[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="2_g2rwe"]
-[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="4_26dou"]
-[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="5_7ncrd"]
+[ext_resource type="Script" path="res://Scripts/General/TargetRaycastDetector.gd" id="5_5ob2p"]
+[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="6_mvw0o"]
+[ext_resource type="Script" path="res://Scripts/General/WeaponSelector.gd" id="6_r1380"]
 
-[node name="WeaponDependencyContainer" type="Node3D" node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+[node name="RifleGun" type="Node3D" node_paths=PackedStringArray("rayCast", "weapon", "weaponAttackInput")]
 script = ExtResource("1_gw1tn")
-weaponAttackInput = NodePath("WeaponInput")
-enemyCollisionFinder = NodePath("EnemyCollisionFinder")
-weapon = NodePath("RangedWeapon")
-damageCalculator = NodePath("DamageCalculator")
+rayCast = NodePath("TargetRaycastDetector")
+weapon = NodePath("RifleGun")
+weaponAttackInput = NodePath("Input")
 
-[node name="RangedWeapon" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+[node name="Input" type="Node3D" parent="."]
+script = ExtResource("6_mvw0o")
+
+[node name="RifleGun" type="Area3D" parent="." node_paths=PackedStringArray("rangedWeaponDependencyContainer")]
 script = ExtResource("2_71obv")
-weaponDependencyContainer = NodePath("..")
-maxPunchedEnemiesValue = 3
-minAttackDamage = 5.0
-maxAttackDamage = 20.0
-scatter = 0.1
+rangedWeaponDependencyContainer = NodePath("..")
 
-[node name="EnemyCollisionFinder" type="Node3D" parent="." node_paths=PackedStringArray("startNodeForMoveRay")]
-script = ExtResource("2_g2rwe")
-startNodeForMoveRay = NodePath("..")
+[node name="WeaponSetter" type="Node3D" parent="." node_paths=PackedStringArray("dependencyContainer")]
+script = ExtResource("6_r1380")
+dependencyContainer = NodePath("..")
 
-[node name="WeaponInput" type="Node3D" parent="."]
-script = ExtResource("4_26dou")
-
-[node name="DamageCalculator" type="Node3D" parent="."]
-script = ExtResource("5_7ncrd")
+[node name="TargetRaycastDetector" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, -1000)
+script = ExtResource("5_5ob2p")

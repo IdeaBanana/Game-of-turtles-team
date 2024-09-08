@@ -1,22 +1,11 @@
-extends Node3D
+extends WeaponDependencyContainer
 
-class_name WeaponDependencyContainer
+class_name RangedWeaponDependencyContainer
 
-@export var weaponAttackInput: WeaponInput
-@export var enemyCollisionFinder: EnemyCollisionFinder
-@export var weapon: Weapon
-@export var damageCalculator: DamageCalculator
+@export var rayCast: TargetRaycastDetector
 
-func GetDamageCalculator() -> DamageCalculator:
-	return damageCalculator
+func GetRayCastEnemyDetector() -> TargetRaycastDetector:
+	return rayCast
 
-func GetCollisiionFinder() -> EnemyCollisionFinder:
-	return enemyCollisionFinder
-
-func GetWeapon() -> Weapon:
-	return weapon
-
-func GetWeaponAttackInput() -> WeaponInput:
-	return weaponAttackInput
 
 ### https://www.youtube.com/watch?v=74XywaLGO5Q

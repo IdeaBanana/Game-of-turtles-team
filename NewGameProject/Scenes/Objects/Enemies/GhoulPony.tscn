@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://b5qmlae2m4ky5"]
+[gd_scene load_steps=7 format=3 uid="uid://b5qmlae2m4ky5"]
 
 [ext_resource type="Script" path="res://Scripts/Enemies/EnemyParent.gd" id="1_t605v"]
 [ext_resource type="Script" path="res://Scripts/General/Hp.gd" id="2_0kcp4"]
-[ext_resource type="Script" path="res://Scripts/General/DamageableArea.gd" id="3_arout"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sax76"]
 
@@ -16,9 +15,6 @@ curve = SubResource("Curve_dhfbu")
 [sub_resource type="AtlasTexture" id="AtlasTexture_4ee6m"]
 atlas = SubResource("CurveTexture_tpbak")
 region = Rect2(119, 0, 1, 1)
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xhmo1"]
-height = 1.52468
 
 [node name="Enemy" type="CharacterBody3D" node_paths=PackedStringArray("hpNode")]
 script = ExtResource("1_t605v")
@@ -35,11 +31,3 @@ texture = SubResource("AtlasTexture_4ee6m")
 [node name="Hp" type="Node" parent="." node_paths=PackedStringArray("_parent")]
 script = ExtResource("2_0kcp4")
 _parent = NodePath("..")
-
-[node name="DamageablePartBody3D" type="Area3D" parent="."]
-script = ExtResource("3_arout")
-damage = 50.0
-
-[node name="Collision" type="CollisionShape3D" parent="DamageablePartBody3D"]
-transform = Transform3D(1.25, 0, 0, 0, 1.25, 0, 0, 0, 1.25, 0, 1, 0)
-shape = SubResource("CapsuleShape3D_xhmo1")

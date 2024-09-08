@@ -2,27 +2,31 @@
 
 [ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_c0mjp"]
 [ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_6xgkf"]
-[ext_resource type="Script" path="res://Scripts/General/DamageCalculator.gd" id="3_1byg3"]
 [ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="4_rp5c3"]
-[ext_resource type="Script" path="res://Scripts/General/CollisionFindRayCast.gd" id="5_5adi4"]
+[ext_resource type="Script" path="res://Scripts/General/WeaponSelector.gd" id="6_8e0ef"]
+[ext_resource type="Script" path="res://Scripts/General/TargetRaycastDetector.gd" id="6_klfw4"]
 
-[node name="CrankGun" type="Node3D" node_paths=PackedStringArray("weaponAttackInput", "enemyCollisionFinder", "weapon", "damageCalculator")]
+[node name="CrankGun" type="Node3D" node_paths=PackedStringArray("rayCast", "weapon", "weaponAttackInput")]
 script = ExtResource("1_c0mjp")
+rayCast = NodePath("RayCast")
+weapon = NodePath("Pistol")
 weaponAttackInput = NodePath("AutomaticWeaponInput")
-enemyCollisionFinder = NodePath("EnemyCollisionFinder")
-weapon = NodePath("CrankGun")
-damageCalculator = NodePath("DamageCalculator")
 
-[node name="CrankGun" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+[node name="Pistol" type="Area3D" parent="." node_paths=PackedStringArray("rangedWeaponDependencyContainer")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4, 0)
 script = ExtResource("2_6xgkf")
-weaponDependencyContainer = NodePath("..")
+rangedWeaponDependencyContainer = NodePath("..")
+minAttackDamage = 20.0
+maxAttackDamage = 40.0
+constAttackDamage = 30.0
 
-[node name="DamageCalculator" type="Node3D" parent="."]
-script = ExtResource("3_1byg3")
+[node name="CurrentWeaponSetter" type="Node3D" parent="." node_paths=PackedStringArray("dependencyContainer")]
+script = ExtResource("6_8e0ef")
+dependencyContainer = NodePath("..")
+
+[node name="RayCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, -1, -1000)
+script = ExtResource("6_klfw4")
 
 [node name="AutomaticWeaponInput" type="Node3D" parent="."]
 script = ExtResource("4_rp5c3")
-
-[node name="EnemyCollisionFinder" type="Node3D" parent="." node_paths=PackedStringArray("startNodeForMoveRay")]
-script = ExtResource("5_5adi4")
-startNodeForMoveRay = NodePath("..")

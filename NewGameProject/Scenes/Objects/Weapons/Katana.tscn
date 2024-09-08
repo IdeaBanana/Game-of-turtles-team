@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://0j8p4irldgd3"]
+
+[ext_resource type="Script" path="res://Scripts/General/MeleeWeaponDependencyContainer.gd" id="1_gbuem"]
+[ext_resource type="Script" path="res://Scripts/General/KatanaWeapon.gd" id="2_ng8ri"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="3_6q4ag"]
+[ext_resource type="Script" path="res://Scripts/General/SemiAutomaticMeleeWeaponInput.gd" id="4_uc5jr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pqwp1"]
+size = Vector3(0.3, 0.3, 1.01079)
+
+[node name="Katana" type="Node3D" node_paths=PackedStringArray("weapon", "weaponAttackInput", "additionalWeaponAttackInput")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+script = ExtResource("1_gbuem")
+weapon = NodePath("Katana")
+weaponAttackInput = NodePath("Input")
+additionalWeaponAttackInput = NodePath("AdditionalInput")
+
+[node name="Katana" type="Area3D" parent="."]
+script = ExtResource("2_ng8ri")
+constAttackDamage = 50.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Katana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.302246, 0.211472)
+shape = SubResource("BoxShape3D_pqwp1")
+
+[node name="Input" type="Node3D" parent="."]
+script = ExtResource("3_6q4ag")
+
+[node name="AdditionalInput" type="Node3D" parent="."]
+script = ExtResource("4_uc5jr")
