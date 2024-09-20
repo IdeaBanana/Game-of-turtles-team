@@ -2,11 +2,10 @@ extends State
 
 class_name AttackState
 
-@export var stateKeeper: AttackKeeper
-@export var currentSelectWeaponControler: PlayerWeaponSelector
+@export var _weaponSelector: PlayerWeaponSelector
 
 func Attack() -> void:
-	currentSelectWeaponControler.GetCurrentWeaponContainer().GetWeapon().StartFire()
+	_weaponSelector.GetCurrentWeaponContainer().GetWeapon().StartFire()
 
 func AdditionalAttack() -> void:
-	currentSelectWeaponControler.GetCurrentWeaponContainer().GetWeapon().StartAdditionalFire()
+	_weaponSelector.GetCurrentWeaponContainer().GetWeapon().StartAdditionalFire()

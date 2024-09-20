@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://b5qmlae2m4ky5"]
 
 [ext_resource type="Script" path="res://Scripts/Enemies/EnemyParent.gd" id="1_t605v"]
-[ext_resource type="Script" path="res://Scripts/General/Hp.gd" id="2_0kcp4"]
+[ext_resource type="Script" path="res://Scripts/General/Abstract/Hp.gd" id="2_0kcp4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sax76"]
 

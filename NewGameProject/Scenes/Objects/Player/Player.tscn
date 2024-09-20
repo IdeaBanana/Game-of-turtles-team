@@ -3,19 +3,19 @@
 [ext_resource type="Script" path="res://Scripts/Cameras/StepAmplitude.gd" id="1_i2h7m"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/StateMachine.gd" id="2_658wc"]
 [ext_resource type="Script" path="res://Scripts/Player/PlayerMouseLook.gd" id="2_x1b0k"]
+[ext_resource type="Script" path="res://Scripts/Cameras/CameraShaker.gd" id="3_de0rp"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerWalkState.gd" id="3_ll1gt"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerSprintState.gd" id="4_pms81"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/StayState.gd" id="5_526qw"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/DashState.gd" id="6_v6qkb"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerMovementStateKeeper.gd" id="7_li8gt"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/ReloadState.gd" id="9_nfc1u"]
+[ext_resource type="Script" path="res://Scripts/Weapons/States/ChangeWeaponState.gd" id="10_086ig"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/PlayerAttackState.gd" id="10_cu0fk"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/Player/AttackKeeper.gd" id="11_mhx56"]
 [ext_resource type="Script" path="res://Scripts/General/FSM/States/IdleShootState.gd" id="11_ycp1h"]
-[ext_resource type="Script" path="res://Scripts/General/CurrentSelectWeapon.gd" id="13_d5uqn"]
-[ext_resource type="Script" path="res://Scripts/General/MeleeWeaponDependencyContainer.gd" id="14_5qogw"]
-[ext_resource type="Script" path="res://Scripts/General/ChainsawWeapon.gd" id="15_qgp07"]
-[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="16_1vkc3"]
+[ext_resource type="Script" path="res://Scripts/Player/PlayerWeaponControler.gd" id="13_d5uqn"]
+[ext_resource type="PackedScene" uid="uid://b16eiryfvlp5o" path="res://Scenes/Objects/Weapons/Pistol.tscn" id="15_ofpyp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_a3ecs"]
 size = Vector3(0.558838, 2, 0.570313)
@@ -38,9 +38,13 @@ _parent = NodePath("../..")
 _head = NodePath("..")
 stepAmplitude = 0.08
 
-[node name="MouseLook" type="Node3D" parent="Head" node_paths=PackedStringArray("_player")]
+[node name="MouseLook" type="Node3D" parent="Head" node_paths=PackedStringArray("_player") groups=["MouseCameraObserver"]]
 script = ExtResource("2_x1b0k")
 _player = NodePath("../..")
+
+[node name="CameraShake" type="Node3D" parent="Head"]
+script = ExtResource("3_de0rp")
+_shakeFade = 16.355
 
 [node name="MovementFSM" type="Node3D" parent="." node_paths=PackedStringArray("initializeState")]
 script = ExtResource("2_658wc")
@@ -75,39 +79,40 @@ dashState = NodePath("../DashState")
 script = ExtResource("2_658wc")
 initializeState = NodePath("IdleShootState")
 
-[node name="ReloadState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("currentSelectWeaponControler")]
+[node name="ChangeWeaponState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_stateKeeper", "_weaponSelector")]
+script = ExtResource("10_086ig")
+_stateKeeper = NodePath("../AttackKeeper")
+_weaponSelector = NodePath("../../CurrentSelectWeapon")
+
+[node name="ReloadState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_stateKeeper", "_weaponSelector")]
 script = ExtResource("9_nfc1u")
-currentSelectWeaponControler = NodePath("../../CurrentSelectWeapon")
+_stateKeeper = NodePath("../AttackKeeper")
+_weaponSelector = NodePath("../../CurrentSelectWeapon")
 
-[node name="AttackState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("stateKeeper", "currentSelectWeaponControler")]
+[node name="AttackState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_stateKeeper", "_weaponSelector")]
 script = ExtResource("10_cu0fk")
-stateKeeper = NodePath("../StateKeeper")
-currentSelectWeaponControler = NodePath("../../CurrentSelectWeapon")
+_stateKeeper = NodePath("../AttackKeeper")
+_weaponSelector = NodePath("../../CurrentSelectWeapon")
 
-[node name="IdleShootState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_stateKeeper", "currentSelectWeaponControler")]
+[node name="IdleShootState" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("_weaponSelector", "_attackKeeper")]
 script = ExtResource("11_ycp1h")
-_stateKeeper = NodePath("../StateKeeper")
-currentSelectWeaponControler = NodePath("../../CurrentSelectWeapon")
+_weaponSelector = NodePath("../../CurrentSelectWeapon")
+_attackKeeper = NodePath("../AttackKeeper")
 
-[node name="StateKeeper" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("reloadState", "attackState", "idleState")]
+[node name="AttackKeeper" type="Node3D" parent="AttackFSM" node_paths=PackedStringArray("reloadState", "attackState", "idleState", "stateMachine")]
 script = ExtResource("11_mhx56")
 reloadState = NodePath("../ReloadState")
 attackState = NodePath("../AttackState")
 idleState = NodePath("../IdleShootState")
+stateMachine = NodePath("..")
 
 [node name="CurrentSelectWeapon" type="Node3D" parent="." node_paths=PackedStringArray("currentWeaponContainer") groups=["CurrentSelectedWeaponContainer"]]
 script = ExtResource("13_d5uqn")
-currentWeaponContainer = NodePath("../Chainsaw")
+currentWeaponContainer = NodePath("../Pistol")
 
-[node name="Chainsaw" type="Node3D" parent="." node_paths=PackedStringArray("weapon", "weaponAttackInput")]
-script = ExtResource("14_5qogw")
-weapon = NodePath("Chainsaw")
-weaponAttackInput = NodePath("Input")
+[node name="Pistol" parent="." instance=ExtResource("15_ofpyp")]
 
-[node name="Chainsaw" type="Area3D" parent="Chainsaw"]
-script = ExtResource("15_qgp07")
+[node name="Pistol" parent="Pistol" index="1" node_paths=PackedStringArray("_weaponContainer")]
+_weaponContainer = NodePath("..")
 
-[node name="Collision" type="CollisionShape3D" parent="Chainsaw/Chainsaw"]
-
-[node name="Input" type="Node3D" parent="Chainsaw"]
-script = ExtResource("16_1vkc3")
+[editable path="Pistol"]

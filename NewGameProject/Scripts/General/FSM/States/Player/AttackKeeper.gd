@@ -6,6 +6,8 @@ class_name AttackKeeper
 @export var attackState: AttackState
 @export var idleState: IdleShootState
 
+
+#region Get
 func GetReloadState() -> ReloadState:
 	return reloadState
 
@@ -14,3 +16,4 @@ func GetAttackState() -> AttackState:
 
 func GetIdleState() -> IdleShootState:
 	return idleState
+#endregion

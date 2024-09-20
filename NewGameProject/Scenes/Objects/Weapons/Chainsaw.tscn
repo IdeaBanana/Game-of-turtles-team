@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://bqbtxbkqma1rp"]
+
+[ext_resource type="Script" path="res://Scripts/Weapons/DependencyContainers/ChainsawDependencyContainer.gd" id="1_16ygt"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Weapons/ChainsawWeapon.gd" id="2_7k7gh"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Input/Main/AutomaticFireInput.gd" id="3_ebl82"]
+[ext_resource type="Script" path="res://Scripts/VisualEffects/Shake/ObjectShaker.gd" id="4_rqoc7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ckrc0"]
+size = Vector3(1, 0.9, 1.3)
+
+[node name="Chainsaw" type="Node3D" node_paths=PackedStringArray("shaker", "weapon", "weaponAttackInput")]
+script = ExtResource("1_16ygt")
+shaker = NodePath("Shaker")
+weapon = NodePath("Chainsaw")
+weaponAttackInput = NodePath("Input")
+
+[node name="Chainsaw" type="Area3D" parent="."]
+script = ExtResource("2_7k7gh")
+maxAttackDamage = 200.0
+
+[node name="Collision" type="CollisionShape3D" parent="Chainsaw"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, -0.95)
+shape = SubResource("BoxShape3D_ckrc0")
+
+[node name="Input" type="Node3D" parent="."]
+script = ExtResource("3_ebl82")
+
+[node name="Shaker" type="Node3D" parent="."]
+script = ExtResource("4_rqoc7")

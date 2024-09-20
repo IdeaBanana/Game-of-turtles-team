@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://cnev3qo4s3ang"]
+
+[ext_resource type="Script" path="res://Scripts/Weapons/DependencyContainers/RangedWeaponDependencyContainer.gd" id="1_2b5p2"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Weapons/RainbowLaserWeapon.gd" id="2_g4ccd"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Input/Main/SemiAutomaticFireInput.gd" id="3_dotwy"]
+[ext_resource type="Script" path="res://Scripts/Weapons/CollisionFinder/EnemyFinderMultiple.gd" id="4_yirlo"]
+
+[node name="RainbowLaser" type="Node3D" node_paths=PackedStringArray("rayCast", "weapon", "weaponAttackInput")]
+script = ExtResource("1_2b5p2")
+rayCast = NodePath("EnemyFinderMultiple")
+weapon = NodePath("RainbowLaser")
+weaponAttackInput = NodePath("SemiAutomaticInput")
+
+[node name="RainbowLaser" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+script = ExtResource("2_g4ccd")
+weaponDependencyContainer = NodePath("..")
+constAttackDamage = 1.5
+minAttackDamage = 1.0
+maxAttackDamage = 2.0
+
+[node name="SemiAutomaticInput" type="Node3D" parent="."]
+script = ExtResource("3_dotwy")
+
+[node name="EnemyFinderMultiple" type="RayCast3D" parent="." node_paths=PackedStringArray("target")]
+script = ExtResource("4_yirlo")
+target = NodePath("..")

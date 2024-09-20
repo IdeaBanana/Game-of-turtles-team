@@ -1,9 +1,9 @@
 [gd_scene load_steps=6 format=3 uid="uid://0j8p4irldgd3"]
 
-[ext_resource type="Script" path="res://Scripts/General/MeleeWeaponDependencyContainer.gd" id="1_gbuem"]
-[ext_resource type="Script" path="res://Scripts/General/KatanaWeapon.gd" id="2_ng8ri"]
-[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="3_6q4ag"]
-[ext_resource type="Script" path="res://Scripts/General/SemiAutomaticMeleeWeaponInput.gd" id="4_uc5jr"]
+[ext_resource type="Script" path="res://Scripts/Weapons/DependencyContainers/MeleeWeaponDependencyContainer.gd" id="1_gbuem"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Weapons/KatanaWeapon.gd" id="2_ng8ri"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Input/Main/SemiAutomaticFireInput.gd" id="3_6q4ag"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Input/Additional/AdditionalSemiAutomaticInput.gd" id="4_w12d8"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pqwp1"]
 size = Vector3(0.3, 0.3, 1.01079)
@@ -27,4 +27,4 @@ shape = SubResource("BoxShape3D_pqwp1")
 script = ExtResource("3_6q4ag")
 
 [node name="AdditionalInput" type="Node3D" parent="."]
-script = ExtResource("4_uc5jr")
+script = ExtResource("4_w12d8")

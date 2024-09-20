@@ -1,28 +1,47 @@
-[gd_scene load_steps=6 format=3 uid="uid://cbq30bkaxs384"]
+[gd_scene load_steps=9 format=3 uid="uid://cbq30bkaxs384"]
 
-[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_gw1tn"]
-[ext_resource type="Script" path="res://Scripts/General/PistolWeapon.gd" id="2_71obv"]
-[ext_resource type="Script" path="res://Scripts/General/TargetRaycastDetector.gd" id="5_5ob2p"]
-[ext_resource type="Script" path="res://Scripts/General/AutomaticFireInput.gd" id="6_mvw0o"]
-[ext_resource type="Script" path="res://Scripts/General/WeaponSelector.gd" id="6_r1380"]
+[ext_resource type="Script" path="res://Scripts/Weapons/DependencyContainers/RangedWeaponDependencyContainer.gd" id="1_gw1tn"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Input/Main/AutomaticFireInput.gd" id="2_yflf4"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Weapons/AutomaticWeapon.gd" id="3_mt1g1"]
+[ext_resource type="Script" path="res://Scripts/Weapons/CollisionFinder/EnemyFinderSingle.gd" id="5_5ob2p"]
+[ext_resource type="Script" path="res://Scripts/Weapons/RangeWeaponAmmoMagazine.gd" id="6_3nyku"]
+[ext_resource type="Script" path="res://Scripts/Weapons/WeaponStartTaker.gd" id="6_r1380"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Magazine/WeaponAmmoMagazineReloaded.gd" id="7_1p31i"]
+[ext_resource type="Script" path="res://Scripts/Weapons/Animation/WeaponAnimation.gd" id="8_p0bot"]
 
-[node name="RifleGun" type="Node3D" node_paths=PackedStringArray("rayCast", "weapon", "weaponAttackInput")]
+[node name="RifleGun" type="Node3D" node_paths=PackedStringArray("rayCast", "weaponAmmunition", "weaponMagazineReloader", "weapon", "weaponAnimation", "weaponAttackInput")]
 script = ExtResource("1_gw1tn")
-rayCast = NodePath("TargetRaycastDetector")
+rayCast = NodePath("EnemyFinder")
+weaponAmmunition = NodePath("WeaponAmmunition")
+weaponMagazineReloader = NodePath("MagazineReloader")
 weapon = NodePath("RifleGun")
+weaponAnimation = NodePath("WeaponAnimation")
 weaponAttackInput = NodePath("Input")
 
 [node name="Input" type="Node3D" parent="."]
-script = ExtResource("6_mvw0o")
+script = ExtResource("2_yflf4")
 
-[node name="RifleGun" type="Area3D" parent="." node_paths=PackedStringArray("rangedWeaponDependencyContainer")]
-script = ExtResource("2_71obv")
-rangedWeaponDependencyContainer = NodePath("..")
+[node name="RifleGun" type="Area3D" parent="." node_paths=PackedStringArray("_weaponContainer")]
+script = ExtResource("3_mt1g1")
+_weaponContainer = NodePath("..")
 
-[node name="WeaponSetter" type="Node3D" parent="." node_paths=PackedStringArray("dependencyContainer")]
+[node name="Setter" type="Node3D" parent="." node_paths=PackedStringArray("_weaponContainer")]
 script = ExtResource("6_r1380")
-dependencyContainer = NodePath("..")
+_weaponContainer = NodePath("..")
 
-[node name="TargetRaycastDetector" type="RayCast3D" parent="."]
+[node name="EnemyFinder" type="RayCast3D" parent="."]
 target_position = Vector3(0, 0, -1000)
 script = ExtResource("5_5ob2p")
+
+[node name="WeaponAmmunition" type="Node3D" parent="." node_paths=PackedStringArray("_weaponContainer")]
+script = ExtResource("6_3nyku")
+_weaponContainer = NodePath("..")
+_initialPickUpMagazineValue = 3
+maxMagazineInWeaponValue = 10
+
+[node name="MagazineReloader" type="Node3D" parent="." node_paths=PackedStringArray("_weaponContainer")]
+script = ExtResource("7_1p31i")
+_weaponContainer = NodePath("..")
+
+[node name="WeaponAnimation" type="AnimatedSprite3D" parent="."]
+script = ExtResource("8_p0bot")

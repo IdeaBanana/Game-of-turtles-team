@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://cnev3qo4s3ang"]
+
+[ext_resource type="Script" path="res://Scripts/General/WeaponDependencyContainer.gd" id="1_2b5p2"]
+[ext_resource type="Script" path="res://Scripts/General/RainbowLaserWeapon.gd" id="2_g4ccd"]
+[ext_resource type="Script" path="res://Scripts/General/PistolWeaponInput.gd" id="3_dotwy"]
+[ext_resource type="Script" path="res://Scripts/General/RayCollisionFinder.gd" id="4_7prfr"]
+
+[node name="RainbowLaser" type="Node3D" node_paths=PackedStringArray("weapon", "weaponAttackInput")]
+script = ExtResource("1_2b5p2")
+weapon = NodePath("RainbowLaser")
+weaponAttackInput = NodePath("SemiAutomaticInput")
+
+[node name="RainbowLaser" type="Area3D" parent="." node_paths=PackedStringArray("weaponDependencyContainer")]
+script = ExtResource("2_g4ccd")
+weaponDependencyContainer = NodePath("..")
+constAttackDamage = 1.5
+minAttackDamage = 1.0
+maxAttackDamage = 2.0
+
+[node name="SemiAutomaticInput" type="Node3D" parent="."]
+script = ExtResource("3_dotwy")
+
+[node name="RayCollisionFinder" type="Node3D" parent="."]
+script = ExtResource("4_7prfr")

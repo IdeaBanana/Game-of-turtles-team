@@ -2,25 +2,31 @@ extends AttackState
 
 class_name PlayerAttackState
 
-var startedSimpleAttack: bool
-var startedAdditionalAttack: bool
+@export var _stateKeeper: AttackKeeper
+
+# Определение начальной атаки
+var _startedSimpleAttack: bool = true
 
 func StartFromSimpleAttack(simpleAttack: bool):
-	startedSimpleAttack = simpleAttack
-	startedAdditionalAttack = not simpleAttack
+	_startedSimpleAttack = simpleAttack
 
 func Enter() -> void:
-	if startedSimpleAttack:
-		Attack()
-	elif startedAdditionalAttack:
-		AdditionalAttack()
+	if _weaponSelector.GetCurrentWeaponContainer() is RangedWeaponDependencyContainer:
+		_weaponSelector.GetCurrentWeaponContainer().GetWeaponMagazineReloader().ReloadNeeded.connect(_OnReloadNeeded)
+		_weaponSelector.GetCurrentWeaponContainer().GetWeapon().AttackEnded.connect(TransitionToOtherState.bind(_stateKeeper.GetIdleState()))
 
-func FixedUpdate(delta: float) -> void:
-	if currentSelectWeaponControler.GetCurrentWeaponContainer().GetWeaponAttackInput().GetStartFireInput():
-		Attack()
+	if _startedSimpleAttack:
+		await Attack()
+		TransitionToOtherState(_stateKeeper.GetIdleState())
 	else:
-		TransitionToOtherState(stateKeeper.GetIdleState())
-	
-	if currentSelectWeaponControler.GetCurrentWeaponContainer().HasAdditionalAttackInput():
-		if currentSelectWeaponControler.GetCurrentWeaponContainer().GetAdditionalWeaponAttackInput().GetStartFireInput():
-			AdditionalAttack()
+		await AdditionalAttack()
+		TransitionToOtherState(_stateKeeper.GetIdleState())
+
+func Exit() -> void:
+	if _weaponSelector.GetCurrentWeaponContainer() is RangedWeaponDependencyContainer:
+		_weaponSelector.GetCurrentWeaponContainer().GetWeaponMagazineReloader().ReloadNeeded.disconnect(_OnReloadNeeded)
+		_weaponSelector.GetCurrentWeaponContainer().GetWeapon().AttackEnded.disconnect(TransitionToOtherState.bind(_stateKeeper.GetIdleState()))
+
+## При перезарядки оружия
+func _OnReloadNeeded() -> void:
+	TransitionToOtherState(_stateKeeper.GetReloadState())

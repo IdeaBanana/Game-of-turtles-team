@@ -38,3 +38,6 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if currentState:
 		currentState.FixedUpdate(delta)
+
+func GetCurrentState() -> State:
+	return currentState
